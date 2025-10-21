@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import { UserButton, useUser, SignInButton } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { isSignedIn, user } = useUser();
+  const router = useRouter();
 
   const generatePrompt = async () => {
     if (!input.trim()) return;
@@ -57,7 +59,15 @@ export default function Home() {
             {isSignedIn ? (
               <>
                 <span className="text-sm text-gray-600">欢迎，{user.firstName || user.username}!</span>
-                <UserButton afterSignOutUrl="/" />
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={() => router.push('/history')}
+                    className="text-sm text-gray-600 hover:text-gray-800"
+                  >
+                    历史记录
+                  </button>
+                  <UserButton afterSignOutUrl="/" />
+                </div>
               </>
             ) : (
               <SignInButton mode="modal">
