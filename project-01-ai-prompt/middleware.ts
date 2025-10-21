@@ -1,22 +1,21 @@
+// middleware.ts
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
-// 定义需要保护的路由
 const isProtectedRoute = createRouteMatcher([
   '/user-profile(.*)',
-  '/dashboard(.*)'
+  // 添加其他你需要保护的路由...
 ]);
 
 export default clerkMiddleware((auth, request) => {
+  // 尝试直接调用 auth.protect
   if (isProtectedRoute(request)) {
-    auth().protect();
+    auth.protect(); // 移除了括号 `()`
   }
 });
 
 export const config = {
   matcher: [
-    // 跳过静态文件和Next.js内部文件
     '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // 总是运行对于API路由
     '/(api|trpc)(.*)',
   ],
 };
